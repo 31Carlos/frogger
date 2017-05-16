@@ -9,19 +9,26 @@ local frogger = require("frogger")
 function scene:create()
     
     frogger:criar_sapo()
-    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6, y = display.contentHeight/ 7 * 2, shape = "circle"})
-    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3, y = display.contentHeight/ 7 * 2, shape = "circle"})
-    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 4.5, y = display.contentHeight / 7 ,  shape = "circle"})
-    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 4.5, y = display.contentHeight / 7 * 3,  shape = "circle"})
+    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.1, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} } })
+    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3.9, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
+    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 4.5,  shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
+    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 6,  shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
     
     direita:addEventListener("touch", moverDireita)
     esquerda:addEventListener("touch", moverEsquerda)
     cima:addEventListener("touch", moverCima)
     baixo:addEventListener("touch", moverBaixo)
 
-    local colunaE = display.newLine(0,0, 0, display.contentHeight )
-    local colunaD = display.newLine(display.contentWidth +1 , 0, display.contentWidth + 1 , display.contentHeight)
+    --local colunaE = display.newLine(0,0, 0, display.contentHeight )
+    --local colunaD = display.newLine(display.contentWidth +1 , 0, display.contentWidth + 1 , display.contentHeight)
     
+    --physics.start(true)
+	
+	--physics.addBody(colunaE, "static", { friction = 1, bounce = 0 })
+
+	--physics.addBody(colunaD, "static", { friction = 1, bounce = 0 })		
+
+
     local sceneGroup = self.view
     
     sceneGroup:insert(frogger.sapo)
@@ -29,8 +36,6 @@ function scene:create()
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
-    sceneGroup:insert(colunaE)
-    sceneGroup:insert(colunaD)
 end
 
 function moverDireita(event)
