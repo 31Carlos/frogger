@@ -18,17 +18,17 @@ function frogger:criar_sapo()
     physics.start(true)
 	physics.setGravity(0,0)
 	physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})
-	
+	--phisics.setDrawMode("hybrid")
 end
 
 function frogger:mover_direita()
-    if frogger.sapo.x < display.contentWidth then
+    if (frogger.sapo.x  + (display.contentWidth / 8) ) <= display.contentWidth then
         frogger.sapo.x = frogger.sapo.x + (display.contentWidth / 8)
     end
 end
 
 function frogger:mover_esquerda()
-    if frogger.sapo.x > 0 then
+    if (frogger.sapo.x - (display.contentWidth/ 8) ) >= 0 then
         frogger.sapo.x = frogger.sapo.x - (display.contentWidth/ 8)
     end
 end
