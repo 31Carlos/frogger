@@ -5,10 +5,10 @@ frogger = {
     sapo
 }
 
-local phisics = require("physics")
+
 
 function frogger:criar_sapo()
-
+    local phisics = require("physics")
         
     frogger.centrox = (display.contentWidth / 8) * 4
     frogger.centroy = (display.contentHeight / 12) * 11
@@ -19,6 +19,8 @@ function frogger:criar_sapo()
 	physics.setGravity(0,0)
 	physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})
 	--phisics.setDrawMode("hybrid")
+
+    return frogger
 end
 
 function frogger:mover_direita()
