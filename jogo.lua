@@ -10,11 +10,13 @@ local fachada = require("Fachada")
 
 local frogger = require("frogger") 
 
+local cenario = require("Cenario")
+
 local sceneCars1
 
-local tempo1, tempo2, tempo3
+local tempo1, tempo2, tempo3, tempo4
 
-local vida = 3
+local vida = 2
 local pontos = 0
 
 function scene:create()
@@ -22,18 +24,18 @@ function scene:create()
 
     local sceneGroup = self.view
     sceneCars1 = display.newGroup()
-   
+    cenario:criar()
     frogger:criar_sapo()
     
     local carsRua1 = fachada:criar_carros(1)
     local carsRua2 = fachada:criar_carros(2)
     local carsRua3 = fachada:criar_carros(3)
-    
+    local carsRua4 = fachada:criar_carros(4)
 
-    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.1, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} } })
-    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3.9, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
-    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 4.5,  shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
-    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 6,  shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
+    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.1, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
+    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3.9, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
+    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 4.5,  shape = "circle", radius = 35, fillColor = { default={1, 1, 0, 0.2}, over={0.8, 0.8, 0.8, 0.1} }})
+    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 6,  shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
     
     direita:addEventListener("touch", moverDireita)
     esquerda:addEventListener("touch", moverEsquerda)
@@ -54,10 +56,20 @@ function scene:create()
     sceneCars1:insert(carsRua3[6].carro)
     sceneCars1:insert(carsRua3[7].carro)
 
+    for f = 8, 10, 1 do
+        sceneCars1:insert(carsRua4[f].carro)
+    end 
+
     tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
-    tempo2 =  timer.performWithDelay(900,moverCarroRua2, 0)
-    tempo3 =  timer.performWithDelay(700,moverCarroRua3, 0)
+    tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
+    tempo3 =  timer.performWithDelay(900,moverCarroRua3, 0)
+    tempo4 =  timer.performWithDelay(1000,moverCarroRua4, 0)
     
+    sceneGroup:insert(cenario.rua)
+    sceneGroup:insert(cenario.rio)
+    sceneGroup:insert(cenario.acostamento)
+    sceneGroup:insert(cenario.iniciocena)
+    sceneGroup:insert(cenario.finalcena)
     sceneGroup:insert(frogger.sapo)
     sceneGroup:insert(life)
     sceneGroup:insert(p)
@@ -105,10 +117,22 @@ function moverCarroRua3()
     end
 end
 
+function moverCarroRua4()
+    
+    sceneCars1[8]:translate(-10, 0)
+    sceneCars1[9]:translate(-10, 0)
+    sceneCars1[10]:translate(-10, 0)
+
+    if sceneCars1[10].x < 0 then
+        sceneCars1[8].x = (display.contentWidth / 8) * 8
+        sceneCars1[9].x = sceneCars1[8].x + ((display.contentWidth / 8) * 4)
+        sceneCars1[10].x = sceneCars1[9].x + ((display.contentWidth / 8) * 4)
+    end
+end
 function moverDireita(event)
     if event.phase == "began" then
         if frogger.sapo.x < display.contentWidth then
-            pontos = pontos + 20
+            pontos = pontos + 10
             p.text = "Pontos: " .. pontos
         end
         frogger:mover_direita()
@@ -121,7 +145,7 @@ function moverEsquerda(event)
        
         
         if frogger.sapo.x > 0 then
-            pontos = pontos + 20
+            pontos = pontos + 10
             p.text = "Pontos: " .. pontos
         end
          frogger:mover_esquerda()
@@ -131,7 +155,7 @@ end
 function moverCima(event)
     if event.phase == "began" then
         frogger:mover_cima()
-        pontos = pontos + 20
+        pontos = pontos + 10
         p.text = "Pontos: " .. pontos
     end
 end
@@ -139,7 +163,7 @@ end
 function moverBaixo(event)
     if event.phase == "began" then
         if frogger.sapo.y < ((display.contentHeight/12) * 11) then
-            pontos = pontos + 20
+            pontos = pontos + 10
             p.text = "Pontos: " .. pontos
         end
         frogger:mover_baixo()

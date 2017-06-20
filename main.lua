@@ -8,4 +8,4 @@
 
 local composer = require("composer")
 
-composer.gotoScene("cena")
+composer.gotoScene("jogo")
