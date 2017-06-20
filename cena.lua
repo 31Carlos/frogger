@@ -2,22 +2,34 @@ local composer = require("composer")
 
 local scene = composer.newScene()
 
+local phisics = require("physics")
+
 local widget = require("widget")
 
 local fachada = require("Fachada")
 
-local sceneCars
+local frogger = require("frogger") 
 
-local tempo
+local sceneCars1
+
+local tempo1, tempo2, tempo3
+
+local vida = 3
+local pontos = 0
 
 function scene:create()
+    physics.start(true)
 
     local sceneGroup = self.view
-    sceneCars = display.newGroup()
+    sceneCars1 = display.newGroup()
+   
+    frogger:criar_sapo()
     
-    fachada:criar()
-    local cars = fachada:criar_carros()
+    local carsRua1 = fachada:criar_carros(1)
+    local carsRua2 = fachada:criar_carros(2)
+    local carsRua3 = fachada:criar_carros(3)
     
+
     local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.1, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} } })
     local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3.9, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
     local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 4.5,  shape = "circle", radius = 35, fillColor = { default={ 0.7, 0.7, 0.7, 0.1 }, over={0.8, 0.8, 0.8, 0.1} }})
@@ -28,55 +40,128 @@ function scene:create()
     cima:addEventListener("touch", moverCima)
     baixo:addEventListener("touch", moverBaixo)
 
-    tempo =  timer.performWithDelay(1000,moverCarroDireita, 0)
-   
-    for i = 1, #cars, 1 do
-        sceneCars:insert(cars[i].carro)
+    life = display.newText({text = "Vidas: " .. vida, x = display.contentWidth/5, y = display.contentHeight/12 * 11.75})
+    p = display.newText({text = "Pontos: " .. pontos, x = display.contentWidth/5 * 4, y = display.contentHeight/12 * 11.75})
+    
+    for i = 1, #carsRua1, 1 do
+        sceneCars1:insert(carsRua1[i].carro)
     end
 
-    sceneGroup:insert(fachada.frogger.sapo)
+    for j = 3, 5, 1 do
+        sceneCars1:insert(carsRua2[j].carro)
+    end
+
+    sceneCars1:insert(carsRua3[6].carro)
+    sceneCars1:insert(carsRua3[7].carro)
+
+    tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
+    tempo2 =  timer.performWithDelay(900,moverCarroRua2, 0)
+    tempo3 =  timer.performWithDelay(700,moverCarroRua3, 0)
+    
+    sceneGroup:insert(frogger.sapo)
+    sceneGroup:insert(life)
+    sceneGroup:insert(p)
     sceneGroup:insert(direita)
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
 
-    Runtime:addEventListener("collision", colisao)
+    physics.setGravity(0,0)
+	--phisics.setDrawMode("hybrid")
 end
 
-function moverCarroDireita()
-    for i = 1, 2, 1 do
-        sceneCars[i]:translate(10, 0)
+function moverCarroRua1()
+    
+    sceneCars1[1]:translate(10, 0)
+    sceneCars1[2]:translate(10, 0)
+
+    if sceneCars1[2].x > display.contentWidth then
+        sceneCars1[1].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+        sceneCars1[2].x = sceneCars1[1].x  - ((display.contentWidth / 8) * 4)
+    end
+end
+
+function moverCarroRua2()
+    
+    sceneCars1[3]:translate(-10, 0)
+    sceneCars1[4]:translate(-10, 0)
+    sceneCars1[5]:translate(-10, 0)
+
+    if sceneCars1[5].x < 0 then
+        sceneCars1[3].x = (display.contentWidth / 8) * 8
+        sceneCars1[4].x = sceneCars1[3].x + ((display.contentWidth / 8) * 4)
+        sceneCars1[5].x = sceneCars1[4].x + ((display.contentWidth / 8) * 4)
+    end
+end
+
+function moverCarroRua3()
+    
+    sceneCars1[6]:translate(10, 0)
+    sceneCars1[7]:translate(10, 0)
+
+    if sceneCars1[7].x > display.contentWidth then
+        sceneCars1[6].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+        sceneCars1[7].x = sceneCars1[6].x  - ((display.contentWidth / 8) * 4)
     end
 end
 
 function moverDireita(event)
     if event.phase == "began" then
-        fachada.frogger:mover_direita()
+        if frogger.sapo.x < display.contentWidth then
+            pontos = pontos + 20
+            p.text = "Pontos: " .. pontos
+        end
+        frogger:mover_direita()
     end
 end
 
 
 function moverEsquerda(event)
     if event.phase == "began" then
-        fachada.frogger:mover_esquerda()
+       
+        
+        if frogger.sapo.x > 0 then
+            pontos = pontos + 20
+            p.text = "Pontos: " .. pontos
+        end
+         frogger:mover_esquerda()
     end
 end
 
 function moverCima(event)
     if event.phase == "began" then
-        fachada.frogger:mover_cima()
+        frogger:mover_cima()
+        pontos = pontos + 20
+        p.text = "Pontos: " .. pontos
     end
 end
 
 function moverBaixo(event)
     if event.phase == "began" then
-        fachada.frogger:mover_baixo()
+        if frogger.sapo.y < ((display.contentHeight/12) * 11) then
+            pontos = pontos + 20
+            p.text = "Pontos: " .. pontos
+        end
+        frogger:mover_baixo()
     end
 end
 
-function colisao(event)
+function criarNovoSapo()
+    frogger:criar_sapo()
+end
+
+function colisao(self, event)
     if event.phase == "began" then
-        fachada.frogger.sapo:removeSelf()
+        frogger.sapo:removeSelf()   
+        
+        if vida ~= 0 then
+            timer.performWithDelay(100, criarNovoSapo)
+            vida = vida - 1
+            life.text = "Vidas: " .. vida
+        elseif vida == 0 then 
+            print("Game Over")
+        end
+
     end
 end
 

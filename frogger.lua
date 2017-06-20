@@ -1,3 +1,4 @@
+local phisics = require("physics")
 
 frogger = {
     centrox, 
@@ -8,18 +9,18 @@ frogger = {
 
 
 function frogger:criar_sapo()
-    local phisics = require("physics")
+        
         
     frogger.centrox = (display.contentWidth / 8) * 4
     frogger.centroy = (display.contentHeight / 12) * 11
     frogger.sapo = display.newCircle(frogger.centrox, frogger.centroy, 20)
     frogger.sapo:setFillColor(0,1,0)
 
-    physics.start(true)
-	physics.setGravity(0,0)
-	physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})
-	--phisics.setDrawMode("hybrid")
+    physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})    
 
+    frogger.sapo.collision = colisao
+    frogger.sapo:addEventListener("collision") 
+    
     return frogger
 end
 
