@@ -15,7 +15,7 @@ local cenario = require("Cenario")
 local sceneCars1
 
 local tempo1, tempo2, tempo3, tempo4
-
+local bonus = 1000
 local vida = 2
 local pontos = 0
 
@@ -44,6 +44,7 @@ function scene:create()
 
     life = display.newText({text = "Vidas: " .. vida, x = display.contentWidth/5, y = display.contentHeight/12 * 11.75})
     p = display.newText({text = "Pontos: " .. pontos, x = display.contentWidth/5 * 4, y = display.contentHeight/12 * 11.75})
+    
     
     for i = 1, #carsRua1, 1 do
         sceneCars1:insert(carsRua1[i].carro)
@@ -134,7 +135,9 @@ function moverDireita(event)
         if frogger.sapo.x < display.contentWidth then
             pontos = pontos + 10
             p.text = "Pontos: " .. pontos
+            bonusVida(pontos)
         end
+        
         frogger:mover_direita()
     end
 end
@@ -147,8 +150,10 @@ function moverEsquerda(event)
         if frogger.sapo.x > 0 then
             pontos = pontos + 10
             p.text = "Pontos: " .. pontos
+            bonusVida(pontos)
         end
-         frogger:mover_esquerda()
+    
+        frogger:mover_esquerda()
     end
 end
 
@@ -157,6 +162,7 @@ function moverCima(event)
         frogger:mover_cima()
         pontos = pontos + 10
         p.text = "Pontos: " .. pontos
+        bonusVida(pontos)
     end
 end
 
@@ -165,11 +171,21 @@ function moverBaixo(event)
         if frogger.sapo.y < ((display.contentHeight/12) * 11) then
             pontos = pontos + 10
             p.text = "Pontos: " .. pontos
+            bonusVida(pontos)
         end
+        
         frogger:mover_baixo()
     end
 end
 
+function bonusVida(pontos)
+    
+    if pontos == bonus then
+        vida = vida + 1
+        life.text = "Vidas: " .. vida
+        bonus = bonus + pontos
+    end
+end
 function criarNovoSapo()
     frogger:criar_sapo()
 end
