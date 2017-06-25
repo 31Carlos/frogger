@@ -6,9 +6,9 @@ local phisics = require("physics")
 
 local widget = require("widget")
 
-local fachada = require("Fachada")
-
 local frogger = require("frogger") 
+
+local fachada = require("Fachada")
 
 local cenario = require("Cenario")
 
@@ -22,9 +22,10 @@ local pontos = 0
 function scene:create()
     physics.start(true)
 
-    local sceneGroup = self.view
     sceneCars1 = display.newGroup()
     sceneObj = display.newGroup()
+    local sceneGroup = self.view
+    
     cenario:criar()
     
     local carsRua1 = fachada:criar_carros(1)
@@ -32,8 +33,8 @@ function scene:create()
     local carsRua3 = fachada:criar_carros(3)
     local carsRua4 = fachada:criar_carros(4)
 
-    
     local obj1 = fachada:criar_obj()
+    
     frogger:criar_sapo()
 
     local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.3, y = display.contentHeight/ 7 * 5.7, shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
@@ -65,22 +66,21 @@ function scene:create()
         sceneCars1:insert(carsRua4[f].carro)
     end 
     
-   
+    
     sceneGroup:insert(cenario.rua)
     sceneGroup:insert(cenario.rio)
     sceneGroup:insert(cenario.acostamento)
     sceneGroup:insert(cenario.iniciocena)
     sceneGroup:insert(cenario.finalcena)
-    sceneGroup:insert(frogger.sapo)
+    sceneGroup:insert(obj1[1].obj)
     sceneGroup:insert(life)
     sceneGroup:insert(p)
     sceneGroup:insert(direita)
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
-
-    sceneObj:insert(obj1[1].obj)
-
+    sceneGroup:insert(frogger.sapo)
+    
     tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
     tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
     tempo3 =  timer.performWithDelay(900,moverCarroRua3, 0)
