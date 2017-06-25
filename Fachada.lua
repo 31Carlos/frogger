@@ -43,7 +43,7 @@ function fachada:criar_carros(rua)
             newCar.carro:setFillColor(1,0,0)
 
             
-	       -- physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
+	        physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
 
             table.insert(fachada.cars, newCar)
 

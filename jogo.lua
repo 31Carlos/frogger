@@ -12,7 +12,7 @@ local fachada = require("Fachada")
 
 local cenario = require("Cenario")
 
-local sceneCars1, sceneObj
+local sceneCars1
 
 local tempo1, tempo2, tempo3, tempo4
 local bonus = 5000
@@ -23,7 +23,6 @@ function scene:create()
     physics.start(true)
 
     sceneCars1 = display.newGroup()
-    sceneObj = display.newGroup()
     local sceneGroup = self.view
     
     cenario:criar()
@@ -33,7 +32,7 @@ function scene:create()
     local carsRua3 = fachada:criar_carros(3)
     local carsRua4 = fachada:criar_carros(4)
 
-    local obj1 = fachada:criar_obj()
+    obj1 = fachada:criar_obj()
     
     frogger:criar_sapo()
 
@@ -75,11 +74,12 @@ function scene:create()
     sceneGroup:insert(obj1[1].obj)
     sceneGroup:insert(life)
     sceneGroup:insert(p)
+    sceneGroup:insert(sceneCars1)
+    sceneGroup:insert(frogger.sapo)
     sceneGroup:insert(direita)
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
-    sceneGroup:insert(frogger.sapo)
     
     tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
     tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
@@ -95,9 +95,12 @@ function moverCarroRua1()
     sceneCars1[1]:translate(10, 0)
     sceneCars1[2]:translate(10, 0)
 
-    if sceneCars1[2].x > display.contentWidth then
+    if sceneCars1[1].x > display.contentWidth then
         sceneCars1[1].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
-        sceneCars1[2].x = sceneCars1[1].x  - ((display.contentWidth / 8) * 4)
+    end
+
+    if sceneCars1[2].x > display.contentWidth then
+        sceneCars1[2].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
     end
 end
 
@@ -119,9 +122,12 @@ function moverCarroRua3()
     sceneCars1[6]:translate(10, 0)
     sceneCars1[7]:translate(10, 0)
 
-    if sceneCars1[7].x > display.contentWidth then
+      if sceneCars1[6].x > display.contentWidth then
         sceneCars1[6].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
-        sceneCars1[7].x = sceneCars1[6].x  - ((display.contentWidth / 8) * 4)
+    end
+
+    if sceneCars1[7].x > display.contentWidth then
+        sceneCars1[7].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
     end
 end
 
