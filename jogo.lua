@@ -12,10 +12,10 @@ local frogger = require("frogger")
 
 local cenario = require("Cenario")
 
-local sceneCars1
+local sceneCars1, sceneObj
 
 local tempo1, tempo2, tempo3, tempo4
-local bonus = 1000
+local bonus = 5000
 local vida = 2
 local pontos = 0
 
@@ -24,18 +24,22 @@ function scene:create()
 
     local sceneGroup = self.view
     sceneCars1 = display.newGroup()
+    sceneObj = display.newGroup()
     cenario:criar()
-    frogger:criar_sapo()
     
     local carsRua1 = fachada:criar_carros(1)
     local carsRua2 = fachada:criar_carros(2)
     local carsRua3 = fachada:criar_carros(3)
     local carsRua4 = fachada:criar_carros(4)
 
-    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.1, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
-    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 3.9, y = display.contentHeight/ 7 * 5.25, shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
-    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 4.5,  shape = "circle", radius = 35, fillColor = { default={1, 1, 0, 0.2}, over={0.8, 0.8, 0.8, 0.1} }})
-    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5, y = display.contentHeight / 7 * 6,  shape = "circle", radius = 35, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
+    
+    local obj1 = fachada:criar_obj()
+    frogger:criar_sapo()
+
+    local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.3, y = display.contentHeight/ 7 * 5.7, shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
+    local esquerda = widget.newButton({label = "<", x = display.contentWidth/7 * 4.7, y = display.contentHeight/ 7 * 5.7, shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
+    local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5.5, y = display.contentHeight / 7 * 5.15,  shape = "circle", radius = 26, fillColor = { default={1, 1, 0, 0.2}, over={0.8, 0.8, 0.8, 0.1} }})
+    local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5.5, y = display.contentHeight / 7 * 6.25,  shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
     
     direita:addEventListener("touch", moverDireita)
     esquerda:addEventListener("touch", moverEsquerda)
@@ -60,12 +64,8 @@ function scene:create()
     for f = 8, 10, 1 do
         sceneCars1:insert(carsRua4[f].carro)
     end 
-
-    tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
-    tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
-    tempo3 =  timer.performWithDelay(900,moverCarroRua3, 0)
-    tempo4 =  timer.performWithDelay(1000,moverCarroRua4, 0)
     
+   
     sceneGroup:insert(cenario.rua)
     sceneGroup:insert(cenario.rio)
     sceneGroup:insert(cenario.acostamento)
@@ -78,6 +78,13 @@ function scene:create()
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
+
+    sceneObj:insert(obj1[1].obj)
+
+    tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
+    tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
+    tempo3 =  timer.performWithDelay(900,moverCarroRua3, 0)
+    tempo4 =  timer.performWithDelay(1000,moverCarroRua4, 0)
 
     physics.setGravity(0,0)
 	--phisics.setDrawMode("hybrid")
@@ -186,6 +193,7 @@ function bonusVida(pontos)
         bonus = bonus + pontos
     end
 end
+
 function criarNovoSapo()
     frogger:criar_sapo()
 end

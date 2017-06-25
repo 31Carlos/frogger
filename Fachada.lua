@@ -1,9 +1,12 @@
 local cars = require("cars")
 
+local objetos = require("Objeto")
+
 local phisics = require("physics")
 
 fachada = {
-    cars = {}
+    cars = {},
+    objetos = {}
 }
 
 
@@ -40,7 +43,7 @@ function fachada:criar_carros(rua)
             newCar.carro:setFillColor(1,0,0)
 
             
-	        physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
+	       -- physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
 
             table.insert(fachada.cars, newCar)
 
@@ -69,5 +72,32 @@ function fachada:criar_carros(rua)
     return fachada.cars
 end
 
+function fachada:criar_obj()
+    local x 
+    local y 
+
+    x = (display.contentWidth / 8)
+    y =  (display.contentHeight/ 12) * 5
+
+    --for i = 1, 2, 1 do
+        local newObj = objetos:new()
+
+        newObj.centrox = x 
+        newObj.centroy = y 
+
+        newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 85, 30)
+        newObj.obj:setFillColor(0.2,0,0)
+
+            
+	    --physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
+
+        table.insert(fachada.objetos, newObj)
+
+       -- x = x - ((display.contentWidth / 8) * 4)
+        
+    --end
+
+    return fachada.objetos
+end
 
 return fachada

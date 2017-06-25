@@ -13,7 +13,7 @@ function frogger:criar_sapo()
         
     frogger.centrox = (display.contentWidth / 8) * 4
     frogger.centroy = (display.contentHeight / 12) * 11
-    frogger.sapo = display.newCircle(frogger.centrox, frogger.centroy, 20)
+    frogger.sapo = display.newCircle(frogger.centrox, frogger.centroy, 15)
     frogger.sapo:setFillColor(0,1,0)
 
     physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})    

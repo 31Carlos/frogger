@@ -1,5 +1,3 @@
-local phisics = require("physics")
-
 cenario = {
     rua, 
     rio,
@@ -14,8 +12,6 @@ function cenario:criar()
 
     cenario.rio = display.newRect(display.contentWidth/2, display.contentHeight/12 * 3.5, display.contentWidth, display.contentHeight/12* 3.95)
     cenario.rio:setFillColor(0, 0.3, 1)
-
-    physics.addBody(cenario.rio, "static",{friction = 1, bounce = 0})    
 
     cenario.acostamento = display.newRect(display.contentWidth/2, display.contentHeight/12 * 6, display.contentWidth, display.contentHeight/12* 1.1)
     cenario.acostamento:setFillColor(0.3,0, 0 )
