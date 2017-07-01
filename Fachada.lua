@@ -39,10 +39,13 @@ function fachada:criar_carros(rua)
             newCar.centrox = x 
             newCar.centroy = y 
 
+            --newCar.carro = display.newImage("imagens/car2.png")
+            --newCar.carro:translate( newCar.centrox, newCar.centroy )
             newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
             newCar.carro:setFillColor(1,0,0)
 
-            
+            --newCar.carro:scale(2.5,2.5)
+            newCar.carro.name = "carro"
 	        physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
 
             table.insert(fachada.cars, newCar)
@@ -59,8 +62,11 @@ function fachada:criar_carros(rua)
 
             newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
             newCar.carro:setFillColor(0,0,1)
+           -- newCar.carro = display.newImage("imagens/car1.png")
+            --newCar.carro:translate( newCar.centrox, newCar.centroy )
 
-           
+            --newCar.carro:scale(2.5,2.5)
+            newCar.carro.name = "carro"
 	        physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
 
             table.insert(fachada.cars, newCar)
@@ -73,29 +79,34 @@ function fachada:criar_carros(rua)
 end
 
 function fachada:criar_obj()
+    
+    
     local x 
     local y 
+        x = (display.contentWidth / 8)
+        y =  (display.contentHeight/ 12) * 5
 
-    x = (display.contentWidth / 8)
-    y =  (display.contentHeight/ 12) * 5
-
-    --for i = 1, 2, 1 do
+    for i = 1, 2, 1 do
         local newObj = objetos:new()
 
         newObj.centrox = x 
         newObj.centroy = y 
 
-        newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 85, 30)
-        newObj.obj:setFillColor(0.2,0,0)
+        newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 65, 30)
+        newObj.obj:setFillColor(0.5,0,0)
+        
+        --newObj.obj = display.newImage("imagens/tronco.png")
+        --newObj.obj:translate( newObj.centrox, newObj.centroy )
 
-            
-	    --physics.addBody(newCar.carro, "static",{friction = 1, bounce = 0})
+        --newObj.obj:scale(3,3)
+    
+	    --physics.addBody(newObj.obj, "static",{density = 0 ,friction = 0, bounce = 0})
 
         table.insert(fachada.objetos, newObj)
 
-       -- x = x - ((display.contentWidth / 8) * 4)
+        x = x - ((display.contentWidth / 8) * 3)
         
-    --end
+    end
 
     return fachada.objetos
 end

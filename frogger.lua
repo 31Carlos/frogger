@@ -15,12 +15,17 @@ function frogger:criar_sapo()
     frogger.centroy = (display.contentHeight / 12) * 11
     frogger.sapo = display.newCircle(frogger.centrox, frogger.centroy, 15)
     frogger.sapo:setFillColor(0,1,0)
+    frogger.sapo.name = "sapo"
+    
 
-    physics.addBody(frogger.sapo, "dynamic",{friction = 1, bounce = 0})    
+    physics.addBody(frogger.sapo, "dynamic",{ friction = 1, bounce = 0})    
 
+    frogger.sapo.isFixedRotation = true
+    
     frogger.sapo.collision = colisao
     frogger.sapo:addEventListener("collision") 
     
+
     return frogger
 end
 

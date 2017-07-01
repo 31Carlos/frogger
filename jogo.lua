@@ -12,9 +12,9 @@ local fachada = require("Fachada")
 
 local cenario = require("Cenario")
 
-local sceneCars1
+local sceneCars1, sceneRio
 
-local tempo1, tempo2, tempo3, tempo4
+local vivo = true
 local bonus = 5000
 local vida = 2
 local pontos = 0
@@ -23,6 +23,8 @@ function scene:create()
     physics.start(true)
 
     sceneCars1 = display.newGroup()
+    sceneRio = display.newGroup()
+    
     local sceneGroup = self.view
     
     cenario:criar()
@@ -33,7 +35,7 @@ function scene:create()
     local carsRua4 = fachada:criar_carros(4)
 
     obj1 = fachada:criar_obj()
-    
+   
     frogger:criar_sapo()
 
     local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.3, y = display.contentHeight/ 7 * 5.7, shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
@@ -41,10 +43,13 @@ function scene:create()
     local cima = widget.newButton({label = "^", x = display.contentWidth/ 7 * 5.5, y = display.contentHeight / 7 * 5.15,  shape = "circle", radius = 26, fillColor = { default={1, 1, 0, 0.2}, over={0.8, 0.8, 0.8, 0.1} }})
     local baixo = widget.newButton({label = "v", x = display.contentWidth/ 7 * 5.5, y = display.contentHeight / 7 * 6.25,  shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} }})
     
+    
+
     direita:addEventListener("touch", moverDireita)
     esquerda:addEventListener("touch", moverEsquerda)
     cima:addEventListener("touch", moverCima)
     baixo:addEventListener("touch", moverBaixo)
+    
 
     life = display.newText({text = "Vidas: " .. vida, x = display.contentWidth/5, y = display.contentHeight/12 * 11.75})
     p = display.newText({text = "Pontos: " .. pontos, x = display.contentWidth/5 * 4, y = display.contentHeight/12 * 11.75})
@@ -65,29 +70,65 @@ function scene:create()
         sceneCars1:insert(carsRua4[f].carro)
     end 
     
-    
+    sceneRio:insert(obj1[1].obj)
+    sceneRio:insert(obj1[2].obj)
+
     sceneGroup:insert(cenario.rua)
     sceneGroup:insert(cenario.rio)
     sceneGroup:insert(cenario.acostamento)
     sceneGroup:insert(cenario.iniciocena)
     sceneGroup:insert(cenario.finalcena)
-    sceneGroup:insert(obj1[1].obj)
     sceneGroup:insert(life)
     sceneGroup:insert(p)
     sceneGroup:insert(sceneCars1)
+    sceneGroup:insert(sceneRio)
     sceneGroup:insert(frogger.sapo)
     sceneGroup:insert(direita)
     sceneGroup:insert(esquerda)
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
     
-    tempo1 =  timer.performWithDelay(1000,moverCarroRua1, 0)
-    tempo2 =  timer.performWithDelay(500,moverCarroRua2, 0)
-    tempo3 =  timer.performWithDelay(900,moverCarroRua3, 0)
-    tempo4 =  timer.performWithDelay(1000,moverCarroRua4, 0)
+    timer.performWithDelay(1000,moverCarroRua1, 0)
+    timer.performWithDelay(500,moverCarroRua2, 0)
+    timer.performWithDelay(900,moverCarroRua3, 0)
+    timer.performWithDelay(1000,moverCarroRua4, 0)
 
+    timer.performWithDelay(500,moverObjRio1, 0)
+    
     physics.setGravity(0,0)
 	--phisics.setDrawMode("hybrid")
+end
+
+function moverObjRio1()
+    
+    sceneRio[1]:translate(10, 0)
+    sceneRio[2]:translate(10, 0)
+
+    if sceneRio[1].x > display.contentWidth then
+        sceneRio[1].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+    end
+    
+    if sceneRio[2].x > display.contentWidth then
+        sceneRio[2].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+    end
+
+    local x1 = sceneRio[1].x - 45
+    local x2 = sceneRio[1].x + 20
+    local y = sceneRio[1].y
+
+    if vivo then
+        if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y  then
+            frogger.sapo:translate(10, 0)
+        end 
+
+        x1 = sceneRio[2].x - 45
+        x2 = sceneRio[2].x + 20
+        y1 = sceneRio[2].y 
+
+        if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y1 then
+            frogger.sapo:translate(10, 0)
+        end 
+    end
 end
 
 function moverCarroRua1()
@@ -143,8 +184,9 @@ function moverCarroRua4()
         sceneCars1[10].x = sceneCars1[9].x + ((display.contentWidth / 8) * 4)
     end
 end
+
 function moverDireita(event)
-    if event.phase == "began" then
+    if event.phase == "began" and vivo then
         if frogger.sapo.x < display.contentWidth then
             pontos = pontos + 10
             p.text = "Pontos: " .. pontos
@@ -155,9 +197,8 @@ function moverDireita(event)
     end
 end
 
-
 function moverEsquerda(event)
-    if event.phase == "began" then
+    if event.phase == "began" and vivo then
        
         
         if frogger.sapo.x > 0 then
@@ -171,16 +212,16 @@ function moverEsquerda(event)
 end
 
 function moverCima(event)
-    if event.phase == "began" then
-        frogger:mover_cima()
+    if event.phase == "began" and vivo then
         pontos = pontos + 10
         p.text = "Pontos: " .. pontos
         bonusVida(pontos)
+        frogger:mover_cima()
     end
 end
 
 function moverBaixo(event)
-    if event.phase == "began" then
+    if event.phase == "began" and vivo then
         if frogger.sapo.y < ((display.contentHeight/12) * 11) then
             pontos = pontos + 10
             p.text = "Pontos: " .. pontos
@@ -202,18 +243,27 @@ end
 
 function criarNovoSapo()
     frogger:criar_sapo()
+    vivo = true
 end
 
 function colisao(self, event)
     if event.phase == "began" then
-        frogger.sapo:removeSelf()   
         
-        if vida ~= 0 then
-            timer.performWithDelay(100, criarNovoSapo)
-            vida = vida - 1
-            life.text = "Vidas: " .. vida
-        elseif vida == 0 then 
-            print("Game Over")
+        
+       print(event.other.name)
+       
+       if event.other.name == "carro" then
+            vivo = false
+            frogger.sapo:removeSelf()   
+            
+            if vida > 0 then
+                timer.performWithDelay(100, criarNovoSapo)
+                vida = vida - 1
+                life.text = "Vidas: " .. vida
+            elseif vida == 0 then 
+                print("Game Over")
+                vida = vida - 1
+            end
         end
 
     end
