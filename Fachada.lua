@@ -16,17 +16,17 @@ function fachada:criar_carros(rua)
     local x 
     local y 
     if rua == 1 then
-        x = (display.contentWidth / 8)
+        x = (display.contentWidth / 8) * 4
         y =  (display.contentHeight/ 12) * 7
 
     elseif rua == 2 then
         x = (display.contentWidth / 8) * 8
         y =  (display.contentHeight/ 12) * 8
     elseif rua == 3 then
-        x = (display.contentWidth / 8)
+        x = (display.contentWidth / 8) * 6
         y =  (display.contentHeight/ 12) * 9
     elseif rua == 4 then
-        x = (display.contentWidth / 8) * 8
+        x = (display.contentWidth / 8) * 5
         y =  (display.contentHeight/ 12) * 10
     end
     
@@ -39,10 +39,10 @@ function fachada:criar_carros(rua)
             newCar.centrox = x 
             newCar.centroy = y 
 
-            --newCar.carro = display.newImage("imagens/car2.png")
-            --newCar.carro:translate( newCar.centrox, newCar.centroy )
-            newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
-            newCar.carro:setFillColor(1,0,0)
+            newCar.carro = display.newImage("imagens/car2.png")
+            newCar.carro:translate( newCar.centrox, newCar.centroy )
+            --newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
+            --newCar.carro:setFillColor(1,0,0)
 
             --newCar.carro:scale(2.5,2.5)
             newCar.carro.name = "carro"
@@ -60,10 +60,11 @@ function fachada:criar_carros(rua)
             newCar.centrox = x 
             newCar.centroy = y 
 
-            newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
-            newCar.carro:setFillColor(0,0,1)
-           -- newCar.carro = display.newImage("imagens/car1.png")
-            --newCar.carro:translate( newCar.centrox, newCar.centroy )
+           -- newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
+            --newCar.carro:setFillColor(0,0,1)
+           
+            newCar.carro = display.newImage("imagens/car1.png")
+            newCar.carro:translate( newCar.centrox, newCar.centroy )
 
             --newCar.carro:scale(2.5,2.5)
             newCar.carro.name = "carro"
@@ -78,25 +79,37 @@ function fachada:criar_carros(rua)
     return fachada.cars
 end
 
-function fachada:criar_obj()
+function fachada:criar_obj(indice)
     
     
     local x 
     local y 
-        x = (display.contentWidth / 8)
-        y =  (display.contentHeight/ 12) * 5
 
+    if indice == 1 then
+        x = (display.contentWidth / 8) * 5
+        y =  (display.contentHeight/ 12) * 2
+    elseif indice == 2 then
+        x = (display.contentWidth / 8) * 8
+        y =  (display.contentHeight/ 12) * 3
+    elseif indice == 3  then
+        x = (display.contentWidth / 8) * 6
+        y =  (display.contentHeight/ 12) * 4
+    elseif indice == 4 then
+        x = (display.contentWidth / 8) * 8
+        y =  (display.contentHeight/ 12) * 5
+    end
+if indice == 1 or indice == 3 then
     for i = 1, 2, 1 do
         local newObj = objetos:new()
 
         newObj.centrox = x 
         newObj.centroy = y 
 
-        newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 65, 30)
-        newObj.obj:setFillColor(0.5,0,0)
+        --newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 120, 30)
+        --newObj.obj:setFillColor(0.5,0,0)
         
-        --newObj.obj = display.newImage("imagens/tronco.png")
-        --newObj.obj:translate( newObj.centrox, newObj.centroy )
+        newObj.obj = display.newImage("imagens/tronco.png")
+        newObj.obj:translate( newObj.centrox, newObj.centroy )
 
         --newObj.obj:scale(3,3)
     
@@ -104,10 +117,30 @@ function fachada:criar_obj()
 
         table.insert(fachada.objetos, newObj)
 
-        x = x - ((display.contentWidth / 8) * 3)
+        x = x - ((display.contentWidth / 8) * 5)
         
     end
+elseif indice == 2 or indice == 4 then
 
+    for i = 1, 3, 1 do
+        local newObj = objetos:new()
+
+        newObj.centrox = x 
+        newObj.centroy = y 
+
+        newObj.obj = display.newImage("imagens/turtle.png")
+        newObj.obj:translate( newObj.centrox, newObj.centroy )
+
+        --newObj.obj = display.newRect(newObj.centrox, newObj.centroy, 70, 30)
+        --newObj.obj:setFillColor(0.7,1,0.1)
+        
+       
+        table.insert(fachada.objetos, newObj)
+
+        x = x + ((display.contentWidth / 8) * 5)
+
+    end
+end
     return fachada.objetos
 end
 

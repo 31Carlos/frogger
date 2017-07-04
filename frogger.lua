@@ -13,8 +13,9 @@ function frogger:criar_sapo()
         
     frogger.centrox = (display.contentWidth / 8) * 4
     frogger.centroy = (display.contentHeight / 12) * 11
-    frogger.sapo = display.newCircle(frogger.centrox, frogger.centroy, 15)
-    frogger.sapo:setFillColor(0,1,0)
+    frogger.sapo  = display.newImage("imagens/frogger.png")
+    frogger.sapo:translate( frogger.centrox, frogger.centroy )
+    --frogger.sapo:setFillColor(0,1,0)
     frogger.sapo.name = "sapo"
     
 

@@ -15,9 +15,12 @@ local cenario = require("Cenario")
 local sceneCars1, sceneRio
 
 local vivo = true
+local onTronco = true
+local onRio = false
 local bonus = 5000
 local vida = 2
 local pontos = 0
+local inicioTrue = false
 
 function scene:create()
     physics.start(true)
@@ -34,8 +37,11 @@ function scene:create()
     local carsRua3 = fachada:criar_carros(3)
     local carsRua4 = fachada:criar_carros(4)
 
-    obj1 = fachada:criar_obj()
-   
+    local obj1 = fachada:criar_obj(1)
+    local obj2 = fachada:criar_obj(2)
+    local obj3 = fachada:criar_obj(3)
+    local obj4 = fachada:criar_obj(4)
+
     frogger:criar_sapo()
 
     local direita = widget.newButton({label = ">",  x = display.contentWidth/7 * 6.3, y = display.contentHeight/ 7 * 5.7, shape = "circle", radius = 26, fillColor = { default={ 1, 1, 0, 0.2 }, over={0.8, 0.8, 0.8, 0.1} } })
@@ -54,7 +60,6 @@ function scene:create()
     life = display.newText({text = "Vidas: " .. vida, x = display.contentWidth/5, y = display.contentHeight/12 * 11.75})
     p = display.newText({text = "Pontos: " .. pontos, x = display.contentWidth/5 * 4, y = display.contentHeight/12 * 11.75})
     
-    
     for i = 1, #carsRua1, 1 do
         sceneCars1:insert(carsRua1[i].carro)
     end
@@ -72,6 +77,21 @@ function scene:create()
     
     sceneRio:insert(obj1[1].obj)
     sceneRio:insert(obj1[2].obj)
+    
+    for i = 1, #obj1, 1 do
+        sceneRio:insert(obj1[i].obj)
+    end
+
+    for j = 3, 5, 1 do
+        sceneRio:insert(obj2[j].obj)
+    end
+
+    sceneRio:insert(obj3[6].obj)
+    sceneRio:insert(obj3[7].obj)
+
+    for f = 8, 10, 1 do
+        sceneRio:insert(obj4[f].obj)
+    end
 
     sceneGroup:insert(cenario.rua)
     sceneGroup:insert(cenario.rio)
@@ -94,11 +114,46 @@ function scene:create()
     timer.performWithDelay(1000,moverCarroRua4, 0)
 
     timer.performWithDelay(500,moverObjRio1, 0)
-    
+    timer.performWithDelay(500,moverObjRio2, 0)
+    timer.performWithDelay(300,moverObjRio3, 0)
+     timer.performWithDelay(300,moverObjRio4, 0)
     physics.setGravity(0,0)
 	--phisics.setDrawMode("hybrid")
 end
 
+function movimentoDuplo(x1, x2, y1, indice)
+
+        if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y1  then
+           onTronco = true
+           if indice == 1 or indice  == 3 then
+                frogger.sapo:translate(10, 0)
+                
+            
+            elseif indice == 2 or indice == 4 then
+                frogger.sapo:translate(-10, 0)
+                
+            end
+        else
+            --onTronco = false
+        end 
+    
+        
+        
+end
+
+function colisaoRio()
+        
+        local rioY1 = display.contentHeight/12
+        local rioY2 = (display.contentHeight/12 * 6) - (display.contentHeight/12 * 0.5)
+        
+    if frogger.sapo.y > rioY1 and frogger.sapo.y < rioY2 then
+            vivo = false
+            frogger.sapo:removeSelf()   
+            vida = vida - 1
+            life.text = "Vidas: " .. vida
+            criarNovoSapo()
+    end 
+end
 function moverObjRio1()
     
     sceneRio[1]:translate(10, 0)
@@ -111,23 +166,90 @@ function moverObjRio1()
     if sceneRio[2].x > display.contentWidth then
         sceneRio[2].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
     end
+    for i = 1, 2, 1 do
+        
+        x1 = sceneRio[i].x - 70
+        x2 = sceneRio[i].x + 60
+        y = sceneRio[i].y
+        if vivo then
+            movimentoDuplo(x1, x2, y, 1) 
+           -- timer.performWithDelay(1000, colisaoRio)
+            
+        end
+    end
+     
 
-    local x1 = sceneRio[1].x - 45
-    local x2 = sceneRio[1].x + 20
-    local y = sceneRio[1].y
+end
 
-    if vivo then
-        if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y  then
-            frogger.sapo:translate(10, 0)
-        end 
 
-        x1 = sceneRio[2].x - 45
-        x2 = sceneRio[2].x + 20
-        y1 = sceneRio[2].y 
+function moverObjRio2() 
+    sceneRio[3]:translate(-10, 0)
+    sceneRio[4]:translate(-10, 0)
+    sceneRio[5]:translate(-10, 0)
 
-        if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y1 then
-            frogger.sapo:translate(10, 0)
-        end 
+    if sceneRio[5].x < 0 then
+        sceneRio[3].x = (display.contentWidth / 8) * 8
+        sceneRio[4].x = sceneRio[3].x + ((display.contentWidth / 8) * 4)
+        sceneRio[5].x = sceneRio[4].x + ((display.contentWidth / 8) * 4)
+    end
+    
+    for i = 3, 5, 1 do
+        x1 = sceneRio[i].x - 30
+        x2 = sceneRio[i].x + 50
+        y = sceneRio[i].y
+        if vivo then
+            movimentoDuplo(x1, x2, y, 2)
+            --timer.performWithDelay(1000, colisaoRio)
+        end
+    end
+
+   
+end
+
+function moverObjRio3()
+    sceneRio[6]:translate(10, 0)
+    sceneRio[7]:translate(10, 0)
+
+      if sceneRio[6].x > display.contentWidth then
+        sceneRio[6].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+    end
+
+    if sceneRio[7].x > display.contentWidth then
+        sceneRio[7].x = (display.contentWidth/8) - (display.contentWidth/8 * 2)
+    end
+
+    for i = 6, 7, 1 do
+        x1 = sceneRio[i].x - 70
+        x2 = sceneRio[i].x + 60
+        y = sceneRio[i].y 
+
+        if vivo then
+            movimentoDuplo(x1, x2, y, 3)
+            --timer.performWithDelay(1000, colisaoRio)
+        end
+    end
+end
+
+function moverObjRio4()
+    sceneRio[8]:translate(-10, 0)
+    sceneRio[9]:translate(-10, 0)
+    sceneRio[10]:translate(-10, 0)
+
+    if sceneRio[10].x < 0 then
+        sceneRio[8].x = (display.contentWidth / 8) * 8
+        sceneRio[9].x = sceneRio[8].x + ((display.contentWidth / 8) * 4)
+        sceneRio[10].x = sceneRio[9].x + ((display.contentWidth / 8) * 4)
+    end
+
+      for i = 8, 10, 1 do
+        x1 = sceneRio[i].x - 40
+        x2 = sceneRio[i].x + 50
+        y = sceneRio[i].y 
+
+        if vivo then
+            movimentoDuplo(x1, x2, y, 4)
+            --timer.performWithDelay(1000, colisaoRio)
+        end
     end
 end
 
@@ -260,15 +382,31 @@ function colisao(self, event)
                 timer.performWithDelay(100, criarNovoSapo)
                 vida = vida - 1
                 life.text = "Vidas: " .. vida
-            elseif vida == 0 then 
-                print("Game Over")
+            elseif vida < 1 then 
+               
+                gameOver = display.newText({text = "Game Over", x = display.contentWidth/2, y = display.contentHeight/12 * 6})
+                inicio = widget.newButton({label = "Reiniciar",  x = display.contentWidth/2, y = display.contentHeight/ 12 * 11 , shape = "rect",  fillColor = { default={ 1, 1, 1}, over={0.8, 0.8, 0.8, 0.1} } })
+                inicioTrue = true
                 vida = vida - 1
+                inicio:addEventListener("touch", reiniciar)
             end
         end
 
     end
 end
 
+function reiniciar()
+    
+    inicio:removeSelf()
+    gameOver:removeSelf()
+    
+    frogger:criar_sapo()
+    vida = 2
+    life.text = "Vidas: " .. vida
+    pontos = 0
+    vivo = true
+    p.text = "Pontos: " .. pontos
+end
 
 scene:addEventListener("create", scene)
 
