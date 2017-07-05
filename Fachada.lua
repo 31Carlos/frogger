@@ -41,6 +41,7 @@ function fachada:criar_carros(rua)
 
             newCar.carro = display.newImage("imagens/car2.png")
             newCar.carro:translate( newCar.centrox, newCar.centroy )
+            
             --newCar.carro = display.newRect(newCar.centrox, newCar.centroy, 65, 30)
             --newCar.carro:setFillColor(1,0,0)
 

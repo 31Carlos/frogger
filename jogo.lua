@@ -10,16 +10,18 @@ local frogger = require("frogger")
 
 local fachada = require("Fachada")
 
+local mosca = require("mosca")
+
 local cenario = require("Cenario")
 
 local sceneCars1, sceneRio
 
 local vivo = true
-local onTronco = true
-local onRio = false
+local moscaRemove = true
 local bonus = 5000
 local vida = 2
 local pontos = 0
+local moscasmortas = 0
 local inicioTrue = false
 
 function scene:create()
@@ -59,7 +61,8 @@ function scene:create()
 
     life = display.newText({text = "Vidas: " .. vida, x = display.contentWidth/5, y = display.contentHeight/12 * 11.75})
     p = display.newText({text = "Pontos: " .. pontos, x = display.contentWidth/5 * 4, y = display.contentHeight/12 * 11.75})
-    
+    moscaText =  display.newText({text = "Moscas: " .. moscasmortas, x = display.contentWidth/5 * 2.5, y = display.contentHeight/12 * 11.75})
+
     for i = 1, #carsRua1, 1 do
         sceneCars1:insert(carsRua1[i].carro)
     end
@@ -108,10 +111,12 @@ function scene:create()
     sceneGroup:insert(cima)
     sceneGroup:insert(baixo)
     
-    timer.performWithDelay(1000,moverCarroRua1, 0)
+    timer.performWithDelay(10000, criar_mosca, 0)
+
+    timer.performWithDelay(300,moverCarroRua1, 0)
     timer.performWithDelay(500,moverCarroRua2, 0)
-    timer.performWithDelay(900,moverCarroRua3, 0)
-    timer.performWithDelay(1000,moverCarroRua4, 0)
+    timer.performWithDelay(200,moverCarroRua3, 0)
+    timer.performWithDelay(500,moverCarroRua4, 0)
 
     timer.performWithDelay(500,moverObjRio1, 0)
     timer.performWithDelay(500,moverObjRio2, 0)
@@ -121,6 +126,20 @@ function scene:create()
 	--phisics.setDrawMode("hybrid")
 end
 
+
+function criar_mosca()
+    
+    mosca:criar_mosca()
+    moscaRemove = true
+    timer.performWithDelay(5000, remove_mosca)
+end
+
+function remove_mosca()
+    if moscaRemove then
+        mosca:mata_mosca()
+        moscaRemove = false
+    end
+end
 function movimentoDuplo(x1, x2, y1, indice)
 
         if frogger.sapo.x > x1 and frogger.sapo.x < x2 and frogger.sapo.y == y1  then
@@ -168,8 +187,8 @@ function moverObjRio1()
     end
     for i = 1, 2, 1 do
         
-        x1 = sceneRio[i].x - 70
-        x2 = sceneRio[i].x + 60
+        x1 = sceneRio[i].x - 35
+        x2 = sceneRio[i].x + 20
         y = sceneRio[i].y
         if vivo then
             movimentoDuplo(x1, x2, y, 1) 
@@ -183,6 +202,7 @@ end
 
 
 function moverObjRio2() 
+    
     sceneRio[3]:translate(-10, 0)
     sceneRio[4]:translate(-10, 0)
     sceneRio[5]:translate(-10, 0)
@@ -195,7 +215,7 @@ function moverObjRio2()
     
     for i = 3, 5, 1 do
         x1 = sceneRio[i].x - 30
-        x2 = sceneRio[i].x + 50
+        x2 = sceneRio[i].x + 30
         y = sceneRio[i].y
         if vivo then
             movimentoDuplo(x1, x2, y, 2)
@@ -219,8 +239,8 @@ function moverObjRio3()
     end
 
     for i = 6, 7, 1 do
-        x1 = sceneRio[i].x - 70
-        x2 = sceneRio[i].x + 60
+        x1 = sceneRio[i].x - 35
+        x2 = sceneRio[i].x + 20
         y = sceneRio[i].y 
 
         if vivo then
@@ -242,8 +262,8 @@ function moverObjRio4()
     end
 
       for i = 8, 10, 1 do
-        x1 = sceneRio[i].x - 40
-        x2 = sceneRio[i].x + 50
+        x1 = sceneRio[i].x - 30
+        x2 = sceneRio[i].x + 30
         y = sceneRio[i].y 
 
         if vivo then
@@ -356,7 +376,7 @@ end
 
 function bonusVida(pontos)
     
-    if pontos == bonus then
+    if pontos >= bonus then
         vida = vida + 1
         life.text = "Vidas: " .. vida
         bonus = bonus + pontos
@@ -384,12 +404,34 @@ function colisao(self, event)
                 life.text = "Vidas: " .. vida
             elseif vida < 1 then 
                
-                gameOver = display.newText({text = "Game Over", x = display.contentWidth/2, y = display.contentHeight/12 * 6})
-                inicio = widget.newButton({label = "Reiniciar",  x = display.contentWidth/2, y = display.contentHeight/ 12 * 11 , shape = "rect",  fillColor = { default={ 1, 1, 1}, over={0.8, 0.8, 0.8, 0.1} } })
-                inicioTrue = true
+                fimDeJogo = display.newText({text = "Game Over", x = display.contentWidth/2, y = display.contentHeight/12 * 6, fontSize = 20})
+                inicio = widget.newButton({label = "Reiniciar",  x = display.contentWidth/2, y = display.contentHeight/ 12 * 10 , shape = "rect",  fillColor = { default={ 1, 1, 1}, over={0.8, 0.8, 0.8, 0.1} } })
                 vida = vida - 1
                 inicio:addEventListener("touch", reiniciar)
             end
+        elseif  event.other.name == "mosca" then
+            
+            pontos = pontos + 2000
+            p.text = "Pontos: " .. pontos
+            bonusVida(pontos)
+
+            moscasmortas = moscasmortas + 1
+            moscaText.text = "Moscas: " .. moscasmortas
+
+
+            vivo = false
+            frogger.sapo:removeSelf()   
+            
+            if moscasmortas == 4 then
+                fimDeJogo = display.newText({text = "PARABENS!!\n Você venceu", x = display.contentWidth/2, y = display.contentHeight/12 * 6, fontSize = 20})
+                inicio = widget.newButton({label = "Reiniciar",  x = display.contentWidth/2, y = display.contentHeight/ 12 * 10 , shape = "rect",  fillColor = { default={ 1, 1, 1}, over={0.8, 0.8, 0.8, 0.1} } })
+                inicio:addEventListener("touch", reiniciar)
+            else
+                
+                timer.performWithDelay(100, criarNovoSapo)
+                remove_mosca() 
+            end
+
         end
 
     end
@@ -398,7 +440,7 @@ end
 function reiniciar()
     
     inicio:removeSelf()
-    gameOver:removeSelf()
+    fimDeJogo:removeSelf()
     
     frogger:criar_sapo()
     vida = 2
@@ -406,6 +448,8 @@ function reiniciar()
     pontos = 0
     vivo = true
     p.text = "Pontos: " .. pontos
+    moscasmortas = 0
+    moscaText.text = "Moscas: " .. moscasmortas
 end
 
 scene:addEventListener("create", scene)
